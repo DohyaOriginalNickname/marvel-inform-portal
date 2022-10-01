@@ -25,7 +25,7 @@ export default class MarvelService {
         if(res.description === ''){
             return {
                 name: res.name,
-                description: "at the moment, the character has no description",
+                description: "At the moment the character has no description",
                 thumbnail: res.thumbnail.path + `.${res.thumbnail.extension}` ,
                 homePage: res.urls[0].url,
                 wiki: res.urls[1].url
