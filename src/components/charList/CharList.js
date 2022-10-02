@@ -1,8 +1,6 @@
 import { Component } from 'react';
 import MarvelService from '../../services/MarvelService';
 import './charList.scss';
-import abyss from '../../resources/img/abyss.jpg';
-
 
 class CharList extends Component {
     state = {
@@ -19,10 +17,14 @@ class CharList extends Component {
 
     createUiElements = () => {
         this.setState({
-            charList:this.state.dataList.map((item, id) => {
+            charList:this.state.dataList.map((item) => {
+                let objectFit = 'cover'
+                if (item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
+                    objectFit = 'unset'
+                }
                 return (
-                    <li className="char__item" key={id}>
-                        <img src={item.thumbnail} alt="abyss"/>
+                    <li className="char__item" key={item.id}>
+                        <img src={item.thumbnail} alt={item.name} style={{objectFit}}/>
                         <div className="char__name">{item.name}</div>
                     </li>
                 )
@@ -31,7 +33,7 @@ class CharList extends Component {
     }
 
     render() {
-        const {charList} = this.state
+        const {charList,} = this.state
         return (
             <div className="char__list">
                 <ul className="char__grid">

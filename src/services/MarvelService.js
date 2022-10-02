@@ -24,6 +24,7 @@ export default class MarvelService {
     _transformCharacter = (res) => {
         if(res.description === ''){
             return {
+                id: res.id,
                 name: res.name,
                 description: "At the moment the character has no description",
                 thumbnail: res.thumbnail.path + `.${res.thumbnail.extension}` ,
@@ -33,6 +34,7 @@ export default class MarvelService {
         }
         if (res.description.length > 40) {
             return {
+                id: res.id,
                 name: res.name,
                 description: res.description.substr(0, 175) + '...',
                 thumbnail: res.thumbnail.path + `.${res.thumbnail.extension}` ,
@@ -41,6 +43,7 @@ export default class MarvelService {
             }
         }
         return {
+            id: res.id,
             name: res.name,
             description: res.description,
             thumbnail: res.thumbnail.path + `.${res.thumbnail.extension}` ,
