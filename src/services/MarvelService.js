@@ -29,7 +29,7 @@ export default class MarvelService {
             thumbnail: res.thumbnail.path + `.${res.thumbnail.extension}` ,
             homePage: res.urls[0].url,
             wiki: res.urls[1].url,
-            comics: res.comics.items 
+            comics: res.comics.items.length !== 0 ? res.comics.items.slice(0,9) : "There is no comics with this character"
         }
     }
 }
