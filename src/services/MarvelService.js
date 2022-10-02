@@ -22,33 +22,14 @@ export default class MarvelService {
     }
 
     _transformCharacter = (res) => {
-        if(res.description === ''){
-            return {
-                id: res.id,
-                name: res.name,
-                description: "At the moment the character has no description",
-                thumbnail: res.thumbnail.path + `.${res.thumbnail.extension}` ,
-                homePage: res.urls[0].url,
-                wiki: res.urls[1].url
-            }
-        }
-        if (res.description.length > 40) {
-            return {
-                id: res.id,
-                name: res.name,
-                description: res.description.substr(0, 175) + '...',
-                thumbnail: res.thumbnail.path + `.${res.thumbnail.extension}` ,
-                homePage: res.urls[0].url,
-                wiki: res.urls[1].url
-            }
-        }
         return {
             id: res.id,
             name: res.name,
-            description: res.description,
+            description: res.description ? res.description.slice(0, 175) + '...' : "At the moment the character has no description",
             thumbnail: res.thumbnail.path + `.${res.thumbnail.extension}` ,
             homePage: res.urls[0].url,
-            wiki: res.urls[1].url
+            wiki: res.urls[1].url,
+            comics: res.comics.items 
         }
     }
 }
