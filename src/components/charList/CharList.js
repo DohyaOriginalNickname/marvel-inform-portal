@@ -1,4 +1,6 @@
 import { Component } from 'react';
+
+import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import MarvelService from '../../services/MarvelService';
 import './charList.scss';
 
@@ -6,13 +8,35 @@ class CharList extends Component {
     state = {
         dataList: [],
         charList: [],
+        error: false,
+        newItemLoading: false,
+        offset: 210
     }
     marvelService = new MarvelService()
 
     componentDidMount(){
-        this.marvelService.getAllCharacters()
-            .then(res => this.setState({dataList: res}))
+        this.onRequestChar()
+    }
+
+    onRequestChar = (offset) => {
+        this.onCharLoading()
+        this.marvelService.getAllCharacters(offset)
+            .then(res => this.setState(({dataList, offset}) => ({
+                dataList: [...dataList, ...res],
+                offset: offset + 9
+            })))
             .then(this.createUiElements)
+            .catch(this.onError)
+    }
+
+    onCharLoading = () => {
+        this.setState({
+            newItemLoading: true
+        })
+    }
+
+    onError = () => {
+        this.setState({error: true})
     }
 
     createUiElements = () => {
@@ -28,18 +52,25 @@ class CharList extends Component {
                         <div className="char__name">{item.name}</div>
                     </li>
                 )
-            })
+            }),
+            newItemLoading: false
         })
     }
 
     render() {
-        const {charList,} = this.state
+        const {charList, error, newItemLoading, offset} = this.state
+        const errorMessage = error ? <ErrorMessage/> : null
         return (
             <div className="char__list">
                 <ul className="char__grid">
+                    {errorMessage}
                     {charList}
                 </ul>
-                <button className="button button__main button__long">
+                <button 
+                    className="button button__main button__long"
+                    disabled = {newItemLoading}
+                    onClick = {() => this.onRequestChar(offset)}
+                >
                     <div className="inner">load more</div>
                 </button>
             </div>
