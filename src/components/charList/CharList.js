@@ -13,7 +13,10 @@ class CharList extends Component {
         newItemLoading: false,
         offset: 210,
         charEnded: false
-    }
+    }   
+
+    arrayOfRefs = []
+
     marvelService = new MarvelService()
 
     componentDidMount(){
@@ -44,19 +47,42 @@ class CharList extends Component {
         })
     }
 
+    function = (id,numRef) => {
+        this.props.onCharSelected(id)
+
+        this.arrayOfRefs.forEach(item => item.classList.remove('char__item_selected'))
+        this.arrayOfRefs[numRef].classList.add('char__item_selected')
+        this.arrayOfRefs[numRef].focus()
+    }
+
+    setRef = (ref) => {
+        this.arrayOfRefs.push(ref)
+    }
+
     onError = () => {
         this.setState({error: true})
     }
 
     createUiElements = () => {
         this.setState({
-            charList:this.state.dataList.map((item) => {
+            charList:this.state.dataList.map((item, numIndex) => {
                 let objectFit = 'cover'
                 if (item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
                     objectFit = 'unset'
                 }
                 return (
-                    <li className="char__item" key={item.id} onClick={() => this.props.onCharSelected(item.id)}>
+                    <li 
+                        className="char__item" 
+                        tabIndex={0}
+                        ref={this.setRef} 
+                        key={item.id} 
+                        onClick = {() => this.function(item.id, numIndex)}
+                        onKeyDown = {(e) => {
+                            if (e.key === ' ' || e.key === "Enter") {
+                                this.function(item.id, numIndex)
+                            }
+                        }}
+                    >
                         <img src={item.thumbnail} alt={item.name} style={{objectFit}}/>
                         <div className="char__name">{item.name}</div>
                     </li>
