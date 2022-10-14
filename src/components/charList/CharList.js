@@ -8,7 +8,6 @@ import './charList.scss';
 const CharList = (props) => {
 
     const [dataList, setDataList] = useState([])
-    const [charList, setCharList] = useState([])
     const [error, setError] = useState(false)
     const [newItemLoading, setNewItemLoading] = useState(false)
     const [offset, setOffset] = useState(210)
@@ -53,7 +52,7 @@ const CharList = (props) => {
     const onError = () => {
         setError(true)
     }
-    
+
     const errorMessage = error ? <ErrorMessage /> : null
     return (
         <div className="char__list">
