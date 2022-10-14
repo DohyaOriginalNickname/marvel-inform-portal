@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef} from 'react';
+import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types'
 
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
@@ -22,19 +22,19 @@ const CharList = (props) => {
         RequestChar()
     }, [])
 
-    const RequestChar = () => {
+    const RequestChar = (offset) => {
         onCharLoading()
         marvelService.getAllCharacters(offset)
-            .then(res => {
+            .then((res) => {
                 let ended = false
                 if (res.length < 9) {
                     ended = true
                 }
-                setDataList(dataList => [...dataList, ...res])
+                setDataList(dataList => dataList.concat(res))
                 setOffset(offset => offset + 9)
                 setCharEnded(charEnded => ended)
+                setNewItemLoading(newItemLoading => false)
             })
-            .then(createUiElements)
             .catch(onError)
     }
 
@@ -53,41 +53,36 @@ const CharList = (props) => {
     const onError = () => {
         setError(true)
     }
-
-    function createUiElements () {
-        setCharList(dataList.map((item,refIndex) => {
-            let objectFit = 'cover'
-            if (item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
-                objectFit = 'unset'
-            }
-            return (
-                <li
-                    className="char__item"
-                    tabIndex={0}
-                    ref={el => arrayOfRefs.current[refIndex] = el}
-                    key={item.id}
-                    onClick={() => workWithRef(item.id, refIndex)}
-                    onKeyDown={(e) => {
-                        if (e.key === ' ' || e.key === "Enter") {
-                            workWithRef(item.id, refIndex)
-                        }
-                    }}
-                >
-                    <img src={item.thumbnail} alt={item.name} style={{ objectFit }} />
-                    <div className="char__name">{item.name}</div>
-                </li>
-            )
-        }))
-
-        setNewItemLoading(newItemLoading => false)
-    }
-
+    
     const errorMessage = error ? <ErrorMessage /> : null
     return (
         <div className="char__list">
+            {errorMessage}
             <ul className="char__grid">
-                {errorMessage}
-                {charList}
+                {dataList.length > 0 ? dataList.map((item, refIndex) => {
+                    let objectFit = 'cover'
+                    if (item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
+                        objectFit = 'unset'
+                    }
+                    return (
+                        <li
+                            className="char__item"
+                            tabIndex={0}
+                            ref={el => arrayOfRefs.current[refIndex] = el}
+                            key={item.id}
+                            onClick={() => workWithRef(item.id, refIndex)}
+                            onKeyDown={(e) => {
+                                if (e.key === ' ' || e.key === "Enter") {
+                                    workWithRef(item.id, refIndex)
+                                }
+                            }}
+                        >
+                            <img src={item.thumbnail} alt={item.name} style={{ objectFit }} />
+                            <div className="char__name">{item.name}</div>
+                        </li>
+                    )
+                    
+                }) : null}
             </ul>
             <button
                 className="button button__main button__long"

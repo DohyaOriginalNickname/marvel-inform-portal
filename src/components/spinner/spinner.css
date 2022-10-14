@@ -19,10 +19,11 @@
 .loadingio-spinner-rolling-emnym052qhs {
     width: 201px;
     height: 201px;
-    display: inline-block;
+    display: flex;
     overflow: hidden;
     background: #ffffff;
     margin: 0 auto;
+    justify-content:center;
 }
 .ldio-h2bv23z2go {
     width: 100%;
