@@ -2,28 +2,27 @@ import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types'
 
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
-import MarvelService from '../../services/MarvelService';
+import useMarvelService from '../../services/MarvelService';
 import './charList.scss';
 
 const CharList = (props) => {
 
     const [dataList, setDataList] = useState([])
-    const [error, setError] = useState(false)
     const [newItemLoading, setNewItemLoading] = useState(false)
     const [offset, setOffset] = useState(210)
     const [charEnded, setCharEnded] = useState(false)
 
     const arrayOfRefs = useRef([])
 
-    const marvelService = new MarvelService()
+    const {error, getAllCharacters} = useMarvelService()
 
     useEffect(() => {
         RequestChar()
     }, [])
 
     const RequestChar = (offset) => {
-        onCharLoading()
-        marvelService.getAllCharacters(offset)
+        setNewItemLoading(true)
+        getAllCharacters(offset)
             .then((res) => {
                 let ended = false
                 if (res.length < 9) {
@@ -34,11 +33,6 @@ const CharList = (props) => {
                 setCharEnded(charEnded => ended)
                 setNewItemLoading(newItemLoading => false)
             })
-            .catch(onError)
-    }
-
-    const onCharLoading = () => {
-        setNewItemLoading(true)
     }
 
     const workWithRef = (id, idRef) => {
@@ -47,10 +41,6 @@ const CharList = (props) => {
         arrayOfRefs.current.forEach(item => item.classList.remove('char__item_selected'))
         arrayOfRefs.current[idRef].classList.add('char__item_selected')
         arrayOfRefs.current[idRef].focus()
-    }
-
-    const onError = () => {
-        setError(true)
     }
 
     const errorMessage = error ? <ErrorMessage /> : null
