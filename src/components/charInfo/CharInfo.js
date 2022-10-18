@@ -10,8 +10,6 @@ import './charInfo.scss';
 
 const CharInfo = (props) => {
     const [character, setChar] = useState(null)
-    // const [loading, setLoading] = useState(false)
-    // const [error, setError] = useState(false)
 
     const {error,loading,getCharacter,clearError} = useMarvelService()
 

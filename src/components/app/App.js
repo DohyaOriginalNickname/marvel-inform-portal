@@ -4,6 +4,7 @@ import AppHeader from "../appHeader/AppHeader";
 import MainPage from "../pages/MainPage"
 import ComicsPage from "../pages/ComicsPage"
 import PageNotFound from "../pages/NotFound";
+import SingleComicPage from "../pages/SingleComicPage";
 
 const App = () => {
     
@@ -16,6 +17,7 @@ const App = () => {
                     <Routes>
                         <Route exact path="/" element={<MainPage/>} />
                         <Route exact path="/comics" element={<ComicsPage/>}/> 
+                        <Route exact path="/comics/:comicId" element={<SingleComicPage/>}/> 
                         <Route exact path="*" element={<PageNotFound/>}></Route>
                     </Routes>
                 </main>
