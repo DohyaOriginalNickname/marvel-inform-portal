@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import Spinner from '../spinner/Spinner';
@@ -11,7 +12,7 @@ import './charInfo.scss';
 const CharInfo = (props) => {
     const [character, setChar] = useState(null)
 
-    const {error,loading,getCharacter,clearError} = useMarvelService()
+    const {error,loading,getCharacter,getComic,clearError} = useMarvelService()
 
     useEffect(() => {
         updateChar()
@@ -86,9 +87,11 @@ const View = ({ char }) => {
                 {
                     Array.isArray(comics) ? comics.map((item,i) => {
                         return (
-                            <li className="char__comics-item" key={i}>
-                                {item.name}
-                            </li>
+                            <Link className="char__comics-item" key={i} to={`/comics/${item.resourceURI.substr(-5).replace(/\//,'')}`} >
+                                <li>
+                                    {item.name}
+                                </li>
+                            </Link>
                         )
                     }) : comics
                 }
