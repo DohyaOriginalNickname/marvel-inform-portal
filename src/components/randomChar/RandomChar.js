@@ -7,11 +7,8 @@ import mjolnir from '../../resources/img/mjolnir.png';
 import setContent from '../../utils/setContent';
 
 const RandomChar = () => {
-
     const [char, setChar] = useState({})
     const {process, setProcess, getCharacter, clearError} = useMarvelService()
-
-    console.log(process);
 
     useEffect(() => {
         updateChar()

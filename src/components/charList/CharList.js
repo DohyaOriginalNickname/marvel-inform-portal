@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types'
 
 import useMarvelService from '../../services/MarvelService';
@@ -77,9 +77,13 @@ const CharList = (props) => {
         )
     }
 
+    const elements = useMemo(() => {
+        return setContentForList(process, ()=>renderItems(dataList), newItemLoading)
+    }, [process])
+
     return (
         <div className="char__list">
-            {setContentForList(process, ()=>renderItems(dataList), newItemLoading)}
+            {elements}
             <button
                 className="button button__main button__long"
                 disabled={newItemLoading}
