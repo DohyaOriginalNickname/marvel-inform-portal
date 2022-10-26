@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types'
 
-import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import useMarvelService from '../../services/MarvelService';
+import setContentForList from '../../utils/setContentForList';
+
 import './charList.scss';
 
 const CharList = (props) => {
@@ -14,7 +15,7 @@ const CharList = (props) => {
 
     const arrayOfRefs = useRef([])
 
-    const {error, getAllCharacters} = useMarvelService()
+    const { process, setProcess, error, getAllCharacters } = useMarvelService()
 
     useEffect(() => {
         RequestChar()
@@ -33,6 +34,7 @@ const CharList = (props) => {
                 setCharEnded(charEnded => ended)
                 setNewItemLoading(newItemLoading => false)
             })
+            .then(() => setProcess('confirmed'))
     }
 
     const workWithRef = (id, idRef) => {
@@ -43,36 +45,41 @@ const CharList = (props) => {
         arrayOfRefs.current[idRef].focus()
     }
 
-    const errorMessage = error ? <ErrorMessage /> : null
+    function renderItems(dataList) {
+        const items = dataList.length > 0 ? dataList.map((item, refIndex) => {
+            let objectFit = 'cover'
+            if (item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
+                objectFit = 'unset'
+            }
+            return (
+                <li
+                    className="char__item"
+                    tabIndex={0}
+                    ref={el => arrayOfRefs.current[refIndex] = el}
+                    key={item.id}
+                    onClick={() => workWithRef(item.id, refIndex)}
+                    onKeyDown={(e) => {
+                        if (e.key === ' ' || e.key === "Enter") {
+                            workWithRef(item.id, refIndex)
+                        }
+                    }}
+                >
+                    <img src={item.thumbnail} alt={item.name} style={{ objectFit }} />
+                    <div className="char__name">{item.name}</div>
+                </li>
+            )
+        }) : null
+
+        return (
+            <ul className="char__grid">
+                {items}
+            </ul>
+        )
+    }
+
     return (
         <div className="char__list">
-            {errorMessage}
-            <ul className="char__grid">
-                {dataList.length > 0 ? dataList.map((item, refIndex) => {
-                    let objectFit = 'cover'
-                    if (item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
-                        objectFit = 'unset'
-                    }
-                    return (
-                        <li
-                            className="char__item"
-                            tabIndex={0}
-                            ref={el => arrayOfRefs.current[refIndex] = el}
-                            key={item.id}
-                            onClick={() => workWithRef(item.id, refIndex)}
-                            onKeyDown={(e) => {
-                                if (e.key === ' ' || e.key === "Enter") {
-                                    workWithRef(item.id, refIndex)
-                                }
-                            }}
-                        >
-                            <img src={item.thumbnail} alt={item.name} style={{ objectFit }} />
-                            <div className="char__name">{item.name}</div>
-                        </li>
-                    )
-                    
-                }) : null}
-            </ul>
+            {setContentForList(process, ()=>renderItems(dataList), newItemLoading)}
             <button
                 className="button button__main button__long"
                 disabled={newItemLoading}

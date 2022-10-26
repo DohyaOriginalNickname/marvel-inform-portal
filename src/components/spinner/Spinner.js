@@ -1,6 +1,6 @@
 import './spinner.css'
 
-const spinner = () => {
+const Spinner = () => {
     return (
         <div className="loadingio-spinner-rolling-emnym052qhs">
             <div className="ldio-h2bv23z2go">
@@ -10,4 +10,4 @@ const spinner = () => {
     )
 }
 
-export default spinner;
+export default Spinner;
